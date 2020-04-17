@@ -24,15 +24,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 import static org.bukkit.inventory.RecipeChoice.*;
 
 public class ReverseBed implements Listener
 {
 	private static final String REVERSE_BED = ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Reverse Bed" ;
+	private ReverseSleep plugin;
 
 	public ReverseBed(ReverseSleep plugin)
 	{
+		this.plugin = plugin;
 		ItemStack result = new ItemStack(Material.BLACK_BED);
 		ItemMeta resultMeta = result.getItemMeta();
 		resultMeta.setDisplayName(REVERSE_BED);
@@ -82,7 +85,12 @@ public class ReverseBed implements Listener
 
 		if (bed.getType().equals(Material.BLACK_BED))
 		{
+			event.setCancelled(true);
 			event.setUseBed(Event.Result.ALLOW);
+		}
+		else if (event.getBed().getWorld().getTime() <= 23458 && event.getBed().getWorld().getTime() >= 12541)
+		{
+			Bukkit.getScheduler().runTaskLater(plugin, ()-> event.getBed().getWorld().setTime(0), 40);
 		}
 	}
 
@@ -92,7 +100,7 @@ public class ReverseBed implements Listener
 		Block bed = event.getBed();
 		if (bed.getType().equals(Material.BLACK_BED))
 		{
-			Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "time set night");
+			event.getBed().getWorld().setTime(13000);
 		}
 	}
 }

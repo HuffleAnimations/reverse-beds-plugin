@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	jcenter()
+	
+	maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+	maven { url 'https://repo.dmulloy2.net/content/groups/public/' }
+	mavenLocal()
+}
+
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 120, 'seconds'
+}
+
+dependencies {
+	compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+
+	compileOnly('com.comphenix.protocol:ProtocolLib:4.5.0')
+	testImplementation 'junit:junit:4.12'
+	testImplementation 'com.github.seeseemelk:MockBukkit-v1.14:0.2.1-SNAPSHOT'
+	implementation group: 'org.bukkit', name: 'craftbukkit', version: '1.15.2-R0.1-SNAPSHOT'
+}
+
+jar.doLast() {
+	project.copy {
+		from 'build/libs/ReverseSleep.jar'
+		into './'
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.5'
+}
+
+task deploy(dependsOn: 'jar') {
+	doLast {
+		project.copy() {
+		from 'build/libs/ReverseSleep.jar'
+		into './server/plugins/'
+		}
+	}
+}
+
+eclipse.classpath.downloadJavadoc = true
+eclipse.classpath.downloadSources = true

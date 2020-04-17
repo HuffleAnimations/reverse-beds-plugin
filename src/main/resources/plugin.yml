@@ -1,0 +1,5 @@
+name: ReverseSleep
+main: be.huffle.reversesleep.ReverseSleep
+version: 0.1.0
+api-version: 1.15
+author: HuffleAnimations
